@@ -111,7 +111,7 @@ export default function Induction() {
 
   useEffect(() => {
     axios
-      .post('https://pacific-dusk-26535.herokuapp.com/get-upcoming-inductions-events', {
+      .post('https://pacific-dusk-26535.herokuapp.com/get-upcoming-society-inductions-events', {
         session_id: localStorage.getItem('session_id'),
         get_what: 'induction'
       })

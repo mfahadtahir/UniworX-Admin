@@ -35,8 +35,8 @@ const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
   { id: 'facultyHeadName', label: 'Faculty Head', alignRight: false },
   { id: 'facultyCoheadName', label: 'Faculty Co Head', alignRight: false },
-  { id: 'presidentName', label: 'President Name', alignRight: false },
-  { id: 'vicepresidentName', label: 'Vice President Name', alignRight: false }
+  { id: 'presidentName', label: 'President', alignRight: false },
+  { id: 'vicepresidentName', label: 'Vice President', alignRight: false }
 ];
 
 // ----------------------------------------------------------------------
@@ -72,6 +72,7 @@ function applySortFilter(array, comparator, query) {
 
 export default function Socities() {
   const [page, setPage] = useState(0);
+  const [freeTeachers, setFreeTeachers] = useState([]);
   const [order, setOrder] = useState('asc');
   const [socities, setSocities] = useState([]);
   const [orderBy, setOrderBy] = useState('name');
@@ -125,7 +126,21 @@ export default function Socities() {
         setSocities(data);
       })
       .catch((err) => console.log(err));
+    axios
+      .post('https://pacific-dusk-26535.herokuapp.com/get-free-faculty', {
+        session_id: localStorage.getItem('session_id')
+      })
+      .then((res) => {
+        let tempfaculty = res.data.faculty_list;
+        tempfaculty = tempfaculty.filter(
+          (faculty) => faculty.roles < JSON.parse(localStorage.getItem('user')).roles
+        );
+        setFreeTeachers(tempfaculty);
+        console.log('Free Teachers: ', res);
+      })
+      .catch((err) => console.log(err));
   }, []);
+
   return (
     <Page title="Dashboard: Events | UniworX">
       <Container>
@@ -182,6 +197,7 @@ export default function Socities() {
                           {/* <TableCell align="left">{facultyHeadName}</TableCell> */}
                           <TableCell align="left">
                             <RoleDropdown
+                              freeTeachers={freeTeachers}
                               access={60}
                               userID={facultyHead}
                               name={facultyHeadName}
@@ -191,6 +207,7 @@ export default function Socities() {
                           {/* <TableCell align="left">{facultyCoheadName}</TableCell> */}
                           <TableCell align="left">
                             <RoleDropdown
+                              freeTeachers={freeTeachers}
                               access={50}
                               userID={facultyCohead}
                               name={facultyCoheadName}

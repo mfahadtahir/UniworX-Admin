@@ -53,6 +53,7 @@ export const NewInductionModal = ({ open, handleClose }) => {
     const {
       target: { value }
     } = event;
+    console.log(value);
     setSelectedTeams(
       // On autofill we get a stringified value.
       typeof value === 'string' ? value.split(',') : value
@@ -62,10 +63,7 @@ export const NewInductionModal = ({ open, handleClose }) => {
   const handleSubmit = () => {
     const data = {};
     data.title = document.getElementById('induction-title').value;
-    data.dept_list = document
-      .getElementById('induction-teams')
-      .value.split(',')
-      .map((item) => item.trim());
+    data.dept_list = selectedTeams;
     data.description = document.getElementById('induction-description').value;
     // data.event_teams = document.getElementById('event-teams').value;
 
@@ -108,13 +106,6 @@ export const NewInductionModal = ({ open, handleClose }) => {
             />
           </Grid>
           <Grid item xs={12}>
-            {/* <TextField
-              id="induction-teams"
-              fullWidth // id="outlined-basic"
-              label="Teams"
-              variant="outlined"
-              defaultValue="Team1, Team2, Team3"
-            /> */}
             <FormControl fullWidth>
               <InputLabel id="demo-multiple-checkbox-label">Teams</InputLabel>
               <Select
