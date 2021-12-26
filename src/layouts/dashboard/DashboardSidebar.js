@@ -24,6 +24,21 @@ const RootStyle = styled('div')(({ theme }) => ({
   }
 }));
 
+const RoleBasedPostion = {
+  0: 'Unauth',
+  5: 'Member',
+  10: 'Coordinator',
+  20: 'Deputies',
+  25: 'Co Head',
+  30: 'Head of House',
+  35: 'Co Director',
+  40: 'President',
+  50: 'Faculty Co head',
+  60: 'Faculty Head',
+  70: 'Admin',
+  90: 'Director'
+};
+
 const AccountStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -41,8 +56,10 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
+  const [user, setUser] = useState(null);
   const [userRole, setUserRole] = useState(80);
   useEffect(() => {
+    setUser(JSON.parse(localStorage.getItem('user')));
     if (isOpenSidebar) {
       onCloseSidebar();
     }
@@ -50,14 +67,20 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   }, [pathname]);
   const getNavSection = () => {
     let config;
-    if (userRole >= 70) {
-      config = sidebarConfig.admin;
-    } else if (userRole >= 50) {
-      config = sidebarConfig.teacher;
-    } else if (userRole >= 35) {
-      config = sidebarConfig.president;
+    if (user) {
+      if (user.roles >= 70) {
+        config = sidebarConfig.admin;
+      } else if (user.roles >= 50) {
+        config = sidebarConfig.teacher;
+      } else if (user.roles >= 35) {
+        config = sidebarConfig.president;
+      } else if (user.roles >= 25) {
+        config = sidebarConfig.head;
+      } else {
+        config = sidebarConfig.unauthorized;
+      }
     } else {
-      config = sidebarConfig.head;
+      config = sidebarConfig.unauthorized;
     }
     return <NavSection navConfig={config} />;
   };
@@ -70,7 +93,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     >
       <Box sx={{ px: 2.5, py: 3 }}>
         <Box component={RouterLink} to="/" sx={{ display: 'inline-flex' }}>
-          <Logo />
+          {/* <Logo /> */}
+          <img src="http://nu.edu.pk/Content/images/NU-logo.jpg" alt="" />
         </Box>
       </Box>
 
@@ -80,56 +104,16 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src={account.photoURL} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                {user ? user.name : null}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {account.role}
+                {user ? RoleBasedPostion[user.roles] : null} ~ {user ? user.society_name : null}
               </Typography>
             </Box>
           </AccountStyle>
         </Link>
       </Box>
-      {getNavSection(userRole)}
-
-      <Box sx={{ flexGrow: 1 }} />
-
-      {/* <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-        <Stack
-          alignItems="center"
-          spacing={3}
-          sx={{
-            p: 2.5,
-            pt: 5,
-            borderRadius: 2,
-            position: 'relative',
-            bgcolor: 'grey.200'
-          }}
-        >
-          <Box
-            component="img"
-            src="/static/illustrations/illustration_avatar.png"
-            sx={{ width: 100, position: 'absolute', top: -50 }}
-          />
-
-          <Box sx={{ textAlign: 'center' }}>
-            <Typography gutterBottom variant="h6">
-              Get more?
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              From only $69
-            </Typography>
-          </Box>
-
-          <Button
-            fullWidth
-            href="https://material-ui.com/store/items/minimal-dashboard/"
-            target="_blank"
-            variant="contained"
-          >
-            Upgrade to Pro
-          </Button>
-        </Stack>
-      </Box> */}
+      {getNavSection()}
     </Scrollbar>
   );
 

@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
+import axios from 'axios';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
@@ -30,26 +31,45 @@ export default function LoginForm() {
 
   const formik = useFormik({
     initialValues: {
-      email: 'user18@gmail.com',
+      email: '',
       password: 'hello'
       // remember: true
     },
     validationSchema: LoginSchema,
     onSubmit: (values) => {
       console.log(values);
-
-      fetch('https://pacific-dusk-26535.herokuapp.com/signin', {
-        method: 'POST', // *GET, POST, PUT, DELETE, etc.
-        body: JSON.stringify(values), // body data type must match "Content-Type" header
-        // mode: 'no-cors' // no-cors, *cors, same-origin
-        // credentials: 'same-origin', // include, *same-origin, omit
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      // ,
+      // "proxy": "https://pacific-dusk-26535.herokuapp.com"
+      axios
+        .post(
+          'https://pacific-dusk-26535.herokuapp.com/signin',
+          // 'http://localhost:3002/signin',
+          // {
+          //   body: values, // body data type must match "Content-Type" header
+          //   // mode: 'no-cors', // no-cors, *cors, same-origin
+          //   credentials: 'same-origin', // include, *same-origin, omit
+          //   headers: {
+          //     'Content-Type': 'application/json'
+          //   }
+          // }
+          values
+        )
         .then((res) => {
-          console.log(res);
-          // navigate('/dashboard/app', { replace: true });
+          if (!res.loginError) {
+            localStorage.setItem('session_id', res.data.ret_session_id);
+            localStorage.setItem('user', JSON.stringify(res.data.user_info));
+            console.log(res.data);
+            if (res.data.user_info.roles <= 10) {
+              console.log('Error, Unauthorized Access');
+              alert('Error, Unauthorized Access');
+            } else if (res.data.user_info.roles >= 70) {
+              navigate('/dashboard/all-events');
+            } else {
+              navigate('/dashboard/events');
+            }
+          } else {
+            console.log(res);
+          }
         })
         .catch((err) => {
           console.log(err);

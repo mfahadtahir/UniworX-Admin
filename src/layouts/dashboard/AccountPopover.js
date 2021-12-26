@@ -1,9 +1,11 @@
+import React, { useRef, useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
-import { useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+
+import axios from 'axios';
 // material
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
@@ -15,35 +17,56 @@ import account from '../../_mocks_/account';
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: homeFill,
-    linkTo: '/'
-  },
-  {
-    label: 'Profile',
-    icon: personFill,
-    linkTo: '#'
-  },
-  {
-    label: 'Settings',
-    icon: settings2Fill,
-    linkTo: '#'
-  }
+  // {
+  //   label: 'Home',
+  //   icon: homeFill,
+  //   linkTo: '/'
+  // },
+  // {
+  //   label: 'Profile',
+  //   icon: personFill,
+  //   linkTo: '#'
+  // },
+  // {
+  //   label: 'Settings',
+  //   icon: settings2Fill,
+  //   linkTo: '#'
+  // }
 ];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const navigate = useNavigate();
+
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
-
+  const [user, setUser] = useState(null);
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleLogout = () => {
+    axios
+      .post('https://pacific-dusk-26535.herokuapp.com/logout', {
+        session_id: localStorage.getItem('session_id')
+      })
+      .then((res) => {
+        console.log('logout successful');
+        localStorage.removeItem('session_id');
+        navigate('/login');
+      });
+  };
+  useEffect(() => {
+    const tempUser = localStorage.getItem('user');
+    if (tempUser) {
+      console.log('found user in localStorage: ', JSON.parse(tempUser));
+      setUser(JSON.parse(tempUser));
+    }
+  }, []);
 
   return (
     <>
@@ -78,10 +101,10 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle1" noWrap>
-            {account.displayName}
+            {user ? user.name : null}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {user ? user.email : null}
           </Typography>
         </Box>
 
@@ -110,7 +133,7 @@ export default function AccountPopover() {
         ))}
 
         <Box sx={{ p: 2, pt: 1.5 }}>
-          <Button fullWidth color="inherit" variant="outlined">
+          <Button onClick={handleLogout} fullWidth color="inherit" variant="outlined">
             Logout
           </Button>
         </Box>

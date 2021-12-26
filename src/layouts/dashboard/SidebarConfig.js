@@ -14,42 +14,53 @@ const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 const sidebarConfig = {
   admin: [
     {
-      title: 'dashboard',
-      path: '/dashboard/app',
+      title: 'all events',
+      path: '/dashboard/all-events',
       icon: getIcon(pieChart2Fill)
     },
     {
-      title: 'faculty',
-      path: '/dashboard/user',
-      icon: getIcon(peopleFill)
-    },
-    {
       title: 'socities',
-      path: '/dashboard/products',
+      path: '/dashboard/socities',
       icon: getIcon(shoppingBagFill)
     }
     // {
-    //   title: 'Upcomming Events',
-    //   path: '/dashboard/blog',
+    //   title: 'Manage Access',
+    //   path: '/dashboard/manage-access',
     //   icon: getIcon(fileTextFill)
     // }
   ],
   teacher: [
     {
-      title: 'dashboard',
-      path: '/dashboard/app',
+      title: 'events',
+      path: '/dashboard/events',
       icon: getIcon(pieChart2Fill)
     },
     {
-      title: 'requests',
-      path: '/dashboard/user',
+      title: 'inductions',
+      path: '/dashboard/induction',
+      icon: getIcon(pieChart2Fill)
+    },
+    {
+      title: 'event request',
+      path: '/dashboard/event-request',
+      icon: getIcon(shoppingBagFill)
+    },
+
+    {
+      title: 'Team',
+      path: '/dashboard/team',
       icon: getIcon(peopleFill)
     },
     {
-      title: 'Team',
-      path: '/dashboard/products',
+      title: 'induction request',
+      path: '/dashboard/induction-request',
       icon: getIcon(shoppingBagFill)
     }
+    // {
+    //   title: 'Manage Access',
+    //   path: '/dashboard/manage-access',
+    //   icon: getIcon(fileTextFill)
+    // }
     // {
     //   title: 'blog',
     //   path: '/dashboard/blog',
@@ -58,48 +69,49 @@ const sidebarConfig = {
   ],
   president: [
     {
-      title: 'dashboard',
-      path: '/dashboard/app',
+      title: 'events',
+      path: '/dashboard/events',
       icon: getIcon(pieChart2Fill)
     },
     {
-      title: 'requests',
-      path: '/dashboard/user',
-      icon: getIcon(peopleFill)
+      title: 'induction',
+      path: '/dashboard/induction',
+      icon: getIcon(pieChart2Fill)
     },
     {
       title: 'team',
-      path: '/dashboard/products',
+      path: '/dashboard/team',
       icon: getIcon(shoppingBagFill)
-    },
-    {
-      title: 'induction results',
-      path: '/dashboard/blog',
-      icon: getIcon(fileTextFill)
     }
+    // {
+    //   title: 'Manage Access',
+    //   path: '/dashboard/manage-access',
+    //   icon: getIcon(fileTextFill)
+    // }
   ],
   head: [
     {
-      title: 'dashboard',
-      path: '/dashboard/app',
+      title: 'events',
+      path: '/dashboard/events',
+      icon: getIcon(pieChart2Fill)
+    },
+    {
+      title: 'induction',
+      path: '/dashboard/induction',
       icon: getIcon(pieChart2Fill)
     },
     {
       title: 'team',
-      path: '/dashboard/user',
+      path: '/dashboard/team',
       icon: getIcon(peopleFill)
-    },
-    // {
-    //   title: 'product',
-    //   path: '/dashboard/products',
-    //   icon: getIcon(shoppingBagFill)
-    // },
-    {
-      title: 'induction results',
-      path: '/dashboard/blog',
-      icon: getIcon(fileTextFill)
     }
-  ]
+    // {
+    //   title: 'Manage Access',
+    //   path: '/dashboard/manage-access',
+    //   icon: getIcon(fileTextFill)
+    // }
+  ],
+  unauthorized: []
 };
 
 export default sidebarConfig;
